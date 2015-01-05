@@ -18,29 +18,36 @@ type Dice interface {
 	Roll() int
 }
 
-type Game struct {
-	config         GameConfig
+type GameState struct {
 	players        []Player
 	camelPositions []int
 	camelOrder     []int
+	curPlayerIndex int
+}
+
+type Game struct {
+	config         GameConfig
 	camelIndexDice Dice
 	camelStepDice  Dice
-	boardLength    int
-	curPlayerIndex int
+	state          GameState
 }
 
 func Init(config GameConfig) *Game {
 	game := Game{
-		config:         config,
-		players:        make([]Player, config.numPlayers),
-		camelPositions: make([]int, config.numCamels),
-		camelOrder:     make([]int, config.numCamels),
+		config: config,
+
 		camelIndexDice: &BoundedDice{&RandomRandInt{}, 0, config.numCamels},
 		camelStepDice:  &BoundedDice{&RandomRandInt{}, config.minCamelSteps, config.maxCamelSteps},
-		curPlayerIndex: config.startPlayerIndex,
+
+		state: GameState{
+			players:        make([]Player, config.numPlayers),
+			camelPositions: make([]int, config.numCamels),
+			camelOrder:     make([]int, config.numCamels),
+			curPlayerIndex: config.startPlayerIndex,
+		},
 	}
-	for i := range game.players {
-		game.players[i].money = config.playerStartMoney
+	for i := range game.state.players {
+		game.state.players[i].money = config.playerStartMoney
 	}
 	return &game
 }

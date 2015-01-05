@@ -18,7 +18,7 @@ func TestAccFullBettingRound(t *testing.T) {
 	// TODO setup so that camel 0 gets ahead
 	game.Dice()
 	game.Dice()
-	if game.players[0].money != 8 {
+	if game.state.players[0].money != 8 {
 		t.Errorf("Bet was not counted.")
 	}
 }
