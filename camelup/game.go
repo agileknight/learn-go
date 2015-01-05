@@ -1,12 +1,12 @@
 package camelup
 
-const (
-	PlayerStartMoney int = 3
-	NumCamels        int = 2
-	NumPlayers       int = 2
-	MinCamelSteps    int = 1
-	MaxCamelSteps    int = 3
-)
+type GameConfig struct {
+	playerStartMoney int
+	numCamels        int
+	numPlayers       int
+	minCamelSteps    int
+	maxCamelSteps    int
+}
 
 type Player struct {
 	money int
@@ -17,17 +17,19 @@ type Dice interface {
 }
 
 type Game struct {
+	config         GameConfig
 	players        []Player
 	camelIndexDice Dice
 	camelStepDice  Dice
 }
 
-func Init(numPlayers int) *Game {
+func Init(config GameConfig) *Game {
 	game := Game{
-		players: make([]Player, numPlayers),
+		config:  config,
+		players: make([]Player, config.numPlayers),
 	}
 	for i := range game.players {
-		game.players[i].money = PlayerStartMoney
+		game.players[i].money = config.playerStartMoney
 	}
 	return &game
 }
