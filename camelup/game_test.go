@@ -16,5 +16,11 @@ func TestInit(t *testing.T) {
 		if spliceLen := len(game.players); spliceLen != c.numPlayers {
 			t.Errorf("Player splice was size %d for num players %d", spliceLen, c.numPlayers)
 		}
+		
+		for i,p := range game.players {
+			if (p.money != 0) {
+				t.Errorf("Player %d got initialized with non-zero money %d", i, p.money)
+			}
+		}
 	}
 }
