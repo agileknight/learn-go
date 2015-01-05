@@ -12,6 +12,14 @@ type CamelDice interface {
 	Roll() (camelIndex, steps int)
 }
 
+type RandomCamelDice struct {
+	
+}
+
+func (this *RandomCamelDice) Roll() (camelIndex, steps int) {
+	return 0, 0
+}
+
 type Game struct {
 	players []Player
 	camelDice *CamelDice
