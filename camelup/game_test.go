@@ -24,6 +24,35 @@ func TestInit(t *testing.T) {
 	}
 }
 
+type StubRandInt struct {
+	returnVal int
+}
+
+func (this *StubRandInt) Intn(n int) int {
+	return this.returnVal
+}
+
+func (this *StubRandInt) Returns(n int) {
+	this.returnVal = n
+}
+
+func TestRandomCamelDiceRoll(t *testing.T) {
+	stub := StubRandInt{}
+	dice := RandomCamelDice{
+		randInt: &stub,
+	}
+	diceRoll := 1
+	
+	stub.Returns(diceRoll)
+	index, steps := dice.Roll()
+	if index != diceRoll {
+		t.Errorf("Index was %d instead of expected %d", index, diceRoll)
+	}
+	if steps != diceRoll {
+		t.Errorf("Steps was %d instead of expected %d", steps, diceRoll)
+	}
+}
+
 func TestAccFullBettingRound(t *testing.T) {
 	// TODO setup with 2 camels in known starting position
 	game := Init(2)

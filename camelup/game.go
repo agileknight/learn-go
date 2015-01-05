@@ -1,5 +1,9 @@
 package camelup
 
+import (
+	"math/rand"
+)
+
 const (
 	PlayerStartMoney int = 3
 )
@@ -12,8 +16,21 @@ type CamelDice interface {
 	Roll() (camelIndex, steps int)
 }
 
-type RandomCamelDice struct {
+// Returns a random int in [0..n)
+type RandInt interface {
+	Intn(n int) int
+}
+
+type RandomRandInt struct {
 	
+}
+
+func (this *RandomRandInt) Intn(n int) int {
+	return rand.Intn(n)
+}
+
+type RandomCamelDice struct {
+	randInt RandInt
 }
 
 func (this *RandomCamelDice) Roll() (camelIndex, steps int) {
@@ -22,7 +39,7 @@ func (this *RandomCamelDice) Roll() (camelIndex, steps int) {
 
 type Game struct {
 	players []Player
-	camelDice *CamelDice
+	camelDice CamelDice
 }
 
 func Init(numPlayers int) *Game {
