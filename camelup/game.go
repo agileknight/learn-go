@@ -10,7 +10,7 @@ type GameConfig struct {
 	startPlayerIndex int
 }
 
-type Player struct {
+type PlayerState struct {
 	money int
 }
 
@@ -19,7 +19,7 @@ type Dice interface {
 }
 
 type GameState struct {
-	players        []Player
+	players        []PlayerState
 	camelPositions []int
 	camelOrder     []int
 	curPlayerIndex int
@@ -40,7 +40,7 @@ func Init(config GameConfig) *Game {
 		camelStepDice:  &BoundedDice{&RandomRandInt{}, config.minCamelSteps, config.maxCamelSteps},
 
 		state: GameState{
-			players:        make([]Player, config.numPlayers),
+			players:        make([]PlayerState, config.numPlayers),
 			camelPositions: make([]int, config.numCamels),
 			camelOrder:     make([]int, config.numCamels),
 			curPlayerIndex: config.startPlayerIndex,
