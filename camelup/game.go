@@ -6,6 +6,10 @@ import (
 
 const (
 	PlayerStartMoney int = 3
+	NumCamels int = 2
+	NumPlayers int = 2
+	MinCamelSteps int = 1
+	MaxCamelSteps int = 3
 )
 
 type Player struct {
@@ -31,10 +35,13 @@ func (this *RandomRandInt) Intn(n int) int {
 
 type RandomCamelDice struct {
 	randInt RandInt
+	numCamels int
+	minSteps int
+	maxSteps int
 }
 
 func (this *RandomCamelDice) Roll() (camelIndex, steps int) {
-	return 0, 0
+	return this.randInt.Intn(this.numCamels), this.randInt.Intn(this.maxSteps)
 }
 
 type Game struct {

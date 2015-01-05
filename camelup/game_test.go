@@ -36,7 +36,7 @@ func (this *StubRandInt) Returns(n int) {
 	this.returnVal = n
 }
 
-func TestRandomCamelDiceRoll(t *testing.T) {
+func TestRandomCamelDiceRollIndex(t *testing.T) {
 	stub := StubRandInt{}
 	dice := RandomCamelDice{
 		randInt: &stub,
