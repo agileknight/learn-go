@@ -8,13 +8,19 @@ type Player struct {
 	money int
 }
 
+type CamelDice interface {
+	Roll() (camelIndex, steps int)
+}
+
 type Game struct {
 	players []Player
+	camelDice *CamelDice
 }
 
 func Init(numPlayers int) *Game {
-	game := Game{}
-	game.players = make([]Player, numPlayers)
+	game := Game{
+		players: make([]Player, numPlayers),
+	}
 	for i := range game.players {
 		game.players[i].money = PlayerStartMoney
 	}
