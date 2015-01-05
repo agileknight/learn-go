@@ -2,6 +2,17 @@ package camelup
 
 import "testing"
 
+type StubDice struct {
+	rolls   []int
+	curRoll int
+}
+
+func (this *StubDice) Roll() int {
+	result := this.rolls[this.curRoll]
+	this.curRoll++
+	return result
+}
+
 func TestAccFullBettingRound(t *testing.T) {
 	config := GameConfig{
 		playerStartMoney: 3,
@@ -14,8 +25,11 @@ func TestAccFullBettingRound(t *testing.T) {
 	}
 
 	game := Init(config)
+
+	game.camelIndexDice = &StubDice{rolls: []int{0, 1}}
+	game.camelStepDice = &StubDice{rolls: []int{3, 1}}
+
 	game.Bet(0)
-	// TODO setup so that camel 0 gets ahead
 	game.Dice()
 	game.Dice()
 	if game.state.players[0].money != 8 {
