@@ -20,3 +20,11 @@ func Init(numPlayers int) *Game {
 	}
 	return &game
 }
+
+func (this *Game) Bet(camelIndex int) {
+	// TODO implement
+}
+
+func (this *Game) Dice() {
+	// TODO implement
+}

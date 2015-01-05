@@ -23,3 +23,15 @@ func TestInit(t *testing.T) {
 		}
 	}
 }
+
+func TestAccFullBettingRound(t *testing.T) {
+	// TODO setup with 2 camels in known starting position
+	game := Init(2)
+	game.Bet(0)
+	// TODO setup so that camel 0 gets ahead
+	game.Dice()
+	game.Dice()
+	if game.players[0].money != 8 {
+		t.Errorf("Bet was not counted.")
+	}
+}
