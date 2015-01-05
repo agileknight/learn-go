@@ -14,14 +14,20 @@ type PlayerState struct {
 	money int
 }
 
+// position is the index on the board
+// level is the height (for stacking camels)
+type CamelState struct {
+	position int
+	level    int
+}
+
 type Dice interface {
 	Roll() int
 }
 
 type GameState struct {
 	players        []PlayerState
-	camelPositions []int
-	camelOrder     []int
+	camels         []CamelState
 	curPlayerIndex int
 }
 
@@ -41,8 +47,7 @@ func Init(config GameConfig) *Game {
 
 		state: GameState{
 			players:        make([]PlayerState, config.numPlayers),
-			camelPositions: make([]int, config.numCamels),
-			camelOrder:     make([]int, config.numCamels),
+			camels:         make([]CamelState, config.numCamels),
 			curPlayerIndex: config.startPlayerIndex,
 		},
 	}
