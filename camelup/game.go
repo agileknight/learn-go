@@ -16,10 +16,6 @@ type Player struct {
 	money int
 }
 
-type CamelDice interface {
-	Roll() (camelIndex, steps int)
-}
-
 // Returns a random int in [0..n)
 type RandInt interface {
 	Intn(n int) int
@@ -33,20 +29,24 @@ func (this *RandomRandInt) Intn(n int) int {
 	return rand.Intn(n)
 }
 
-type RandomCamelDice struct {
-	randInt RandInt
-	numCamels int
-	minSteps int
-	maxSteps int
+type Dice interface {
+	Roll() int
 }
 
-func (this *RandomCamelDice) Roll() (camelIndex, steps int) {
-	return this.randInt.Intn(this.numCamels), this.randInt.Intn(this.maxSteps)
+type BoundedDice struct {
+	rand RandInt
+	minValue int
+	maxValue int
+}
+
+func (this *BoundedDice) Roll() int {
+	return this.minValue + this.rand.Intn(this.maxValue - this.minValue + 1)
 }
 
 type Game struct {
 	players []Player
-	camelDice CamelDice
+	camelIndexDice Dice
+	camelStepDice Dice
 }
 
 func Init(numPlayers int) *Game {
