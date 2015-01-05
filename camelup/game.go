@@ -1,5 +1,9 @@
 package camelup
 
+const (
+	PlayerStartMoney int = 3
+)
+
 type Player struct {
 	money int
 }
@@ -8,6 +12,11 @@ type Game struct {
 	players []Player
 }
 
-func (this *Game) Init(numPlayers int) {
-	this.players = make([]Player, numPlayers)
+func Init(numPlayers int) *Game {
+	game := Game{}
+	game.players = make([]Player, numPlayers)
+	for i := range game.players {
+		game.players[i].money = PlayerStartMoney
+	}
+	return &game
 }
