@@ -11,7 +11,8 @@ type GameConfig struct {
 }
 
 type PlayerState struct {
-	money int
+	money                  int
+	betAmountsByCamelIndex map[int][]int
 }
 
 // position is the index on the board
@@ -84,6 +85,7 @@ func Init(config GameConfig) *Game {
 	}
 	for i := range game.state.players {
 		game.state.players[i].money = config.playerStartMoney
+		game.state.players[i].betAmountsByCamelIndex = make(map[int][]int)
 	}
 	game.camelStartPositioner.Position(game.state.camels)
 	return &game
@@ -115,12 +117,63 @@ func moveCamel(camels []CamelState, camelIndex int, camelSteps int) {
 	moveCamelsStartingAtLevel(camels, curPos, targetPos, moveLevel)
 }
 
+func findWinnerExcludingIndex(camels []CamelState, excludedIndex int) int {
+	winnerIndex := 0
+	winPos := 0
+	winLevel := 0
+	for i := range camels {
+		if i == excludedIndex {
+			continue
+		}
+		if camels[i].position > winPos || camels[i].position == winPos && camels[i].level > winLevel {
+			winPos = camels[i].position
+			winLevel = camels[i].level
+			winnerIndex = i
+		}
+	}
+
+	return winnerIndex
+}
+
+func findWinnerCamels(camels []CamelState) (winnerIndex int, secondIndex int) {
+	winnerIndex = findWinnerExcludingIndex(camels, -1)
+	secondIndex = findWinnerExcludingIndex(camels, winnerIndex)
+	return
+}
+
+func (this *Game) payout() {
+	winnerIndex, secondIndex := findWinnerCamels(this.state.camels)
+	for _, player := range this.state.players {
+		totalDiff := 0
+		for _, amount := range player.betAmountsByCamelIndex[winnerIndex] {
+			totalDiff += amount
+		}
+		totalDiff += len(player.betAmountsByCamelIndex[secondIndex])
+		for i := range this.state.camels {
+			if i != winnerIndex && i != secondIndex {
+				totalDiff -= len(player.betAmountsByCamelIndex[i])
+			}
+		}
+	}
+}
+
+func (this *Game) nextPlayer() {
+	this.state.curPlayerIndex = (this.state.curPlayerIndex + 1) % this.config.numPlayers
+}
+
 func (this *Game) Dice() {
 	camelIndex := this.camelIndexDice.Roll()
 	camelSteps := this.camelStepDice.Roll()
 	moveCamel(this.state.camels, camelIndex, camelSteps)
+	this.state.camelMovesLeft--
+	if this.state.camelMovesLeft == 0 {
+		this.state.camelMovesLeft = this.config.numCamels
+		this.payout()
+	}
+	this.nextPlayer()
 }
 
 func (this *Game) Bet(camelIndex int) {
-	// TODO implement
+	this.state.players[this.state.curPlayerIndex].betAmountsByCamelIndex[camelIndex] = append(this.state.players[this.state.curPlayerIndex].betAmountsByCamelIndex[camelIndex], 5)
+	this.nextPlayer()
 }
