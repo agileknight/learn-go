@@ -40,22 +40,21 @@ type RandomCamelStartPositioner struct {
 	camelStepDice Dice
 }
 
-func (this *RandomCamelStartPositioner) Position(camels []CamelState) {
-	camelsByPosition := make(map[int][]CamelState)
-	for i := range camels {
-		camel := &camels[i]
-		pos := this.camelStepDice.Roll()
-		camel.position = pos
-
-		maxLevel := -1
-		for _, camelAtPos := range camelsByPosition[pos] {
-			if camelAtPos.level > maxLevel {
-				maxLevel = camelAtPos.level
-			}
+func findInsertLevelAtPos(camels []CamelState, position int) int {
+	maxLevel := -1
+	for _, camel := range camels {
+		if camel.position == position && camel.level > maxLevel {
+			maxLevel = camel.level
 		}
+	}
+	return maxLevel + 1
+}
 
-		camel.level = maxLevel + 1
-		camelsByPosition[pos] = append(camelsByPosition[pos], *camel)
+func (this *RandomCamelStartPositioner) Position(camels []CamelState) {
+	for i := range camels {
+		pos := this.camelStepDice.Roll()
+		camels[i].level = findInsertLevelAtPos(camels, pos)
+		camels[i].position = pos
 	}
 }
 
