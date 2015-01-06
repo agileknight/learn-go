@@ -93,10 +93,31 @@ func (this *Game) Bet(camelIndex int) {
 	// TODO implement
 }
 
+func findCamelAtPosAndLevel(camels []CamelState, pos int, level int) (index int, found bool) {
+	for i := range camels {
+		if camels[i].position == pos && camels[i].level == level {
+			return i, true
+		}
+	}
+
+	return -1, false
+}
+
+func moveCamelsStartingAtLevel(camels []CamelState, curPos int, targetPos int, level int) {
+	i, found := findCamelAtPosAndLevel(camels, curPos, level)
+	if found {
+		targetLevel := findInsertLevelAtPos(camels, targetPos)
+		camels[i].level = targetLevel
+		camels[i].position = targetPos
+		moveCamelsStartingAtLevel(camels, curPos, targetPos, level+1)
+	}
+}
+
 func moveCamel(camels []CamelState, camelIndex int, camelSteps int) {
-	pos := camels[camelIndex].position + camelSteps
-	camels[camelIndex].level = findInsertLevelAtPos(camels, pos)
-	camels[camelIndex].position = pos
+	moveLevel := camels[camelIndex].level
+	curPos := camels[camelIndex].position
+	targetPos := curPos + camelSteps
+	moveCamelsStartingAtLevel(camels, curPos, targetPos, moveLevel)
 }
 
 func (this *Game) Dice() {
