@@ -29,6 +29,7 @@ type GameState struct {
 	players        []PlayerState
 	camels         []CamelState
 	curPlayerIndex int
+	camelMovesLeft int
 }
 
 type CamelStartPositioner interface {
@@ -79,6 +80,7 @@ func Init(config GameConfig) *Game {
 			players:        make([]PlayerState, config.numPlayers),
 			camels:         make([]CamelState, config.numCamels),
 			curPlayerIndex: config.startPlayerIndex,
+			camelMovesLeft: config.numCamels,
 		},
 	}
 	for i := range game.state.players {
@@ -92,6 +94,12 @@ func (this *Game) Bet(camelIndex int) {
 	// TODO implement
 }
 
-func (this *Game) Dice() {
+func moveCamel(camels []CamelState, camelIndex int, camelSteps int) {
 	// TODO implement
+}
+
+func (this *Game) Dice() {
+	camelIndex := this.camelIndexDice.Roll()
+	camelSteps := this.camelStepDice.Roll()
+	moveCamel(this.state.camels, camelIndex, camelSteps)
 }

@@ -39,6 +39,36 @@ func TestStartPositioning(t *testing.T) {
 	}
 }
 
+func TestMoveCamel(t *testing.T) {
+	cases := []struct {
+		camelPositions    []int
+		camelLevels       []int
+		index             int
+		steps             int
+		expectedPositions []int
+		expectedLevels    []int
+	}{
+		{[]int{0, 1}, []int{0, 0}, 0, 1, []int{1, 1}, []int{1, 0}},
+	}
+
+	for _, c := range cases {
+		numCamels := len(c.camelPositions)
+		camelStates := make([]CamelState, numCamels)
+		for i := range camelStates {
+			camelStates[i] = CamelState{c.camelPositions[i], c.camelLevels[i]}
+		}
+		moveCamel(camelStates, c.index, c.steps)
+		for i := range camelStates {
+			if gotPos := camelStates[i].position; gotPos != c.expectedPositions[i] {
+				t.Errorf("Position mismatch of camel at index %d. Expected %d but was %d.", i, c.expectedPositions[i], gotPos)
+			}
+			if gotLevel := camelStates[i].level; gotLevel != c.expectedLevels[i] {
+				t.Errorf("Level mismatch of camel at index %d. Expected %d but was %d.", i, c.expectedLevels[i], gotLevel)
+			}
+		}
+	}
+}
+
 func TestAccFullBettingRound(t *testing.T) {
 	config := GameConfig{
 		playerStartMoney: 3,
