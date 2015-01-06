@@ -26,7 +26,7 @@ func TestStartPositioning(t *testing.T) {
 	for _, c := range cases {
 		positioner := &RandomCamelStartPositioner{camelStepDice: &StubDice{rolls: c.diceRolls}}
 		camelStates := make([]CamelState, c.numCamels)
-		positioner.Position(&camelStates)
+		positioner.Position(camelStates)
 		for i := range camelStates {
 			if gotPos := camelStates[i].position; gotPos != c.expectedPositions[i] {
 				t.Errorf("Wrong starting position of camel at index %d. Expected %d but was %d.", i, c.expectedPositions[i], gotPos)

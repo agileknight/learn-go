@@ -32,15 +32,17 @@ type GameState struct {
 }
 
 type CamelStartPositioner interface {
-	Position(camels *[]CamelState)
+	Position(camels []CamelState)
 }
 
 type RandomCamelStartPositioner struct {
 	camelStepDice Dice
 }
 
-func (this *RandomCamelStartPositioner) Position(camel *[]CamelState) {
-	// TODO implement
+func (this *RandomCamelStartPositioner) Position(camels []CamelState) {
+	for i := range camels {
+		camels[i].position = this.camelStepDice.Roll()
+	}
 }
 
 type Game struct {
@@ -69,7 +71,7 @@ func Init(config GameConfig) *Game {
 	for i := range game.state.players {
 		game.state.players[i].money = config.playerStartMoney
 	}
-	game.camelStartPositioner.Position(&game.state.camels)
+	game.camelStartPositioner.Position(game.state.camels)
 	return &game
 }
 
