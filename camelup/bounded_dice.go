@@ -25,3 +25,13 @@ type BoundedDice struct {
 func (this *BoundedDice) Roll() int {
 	return this.minValue + this.rand.Intn(this.maxValue-this.minValue+1)
 }
+
+type NoDuplicatesBoundedDice struct {
+	rand     RandInt
+	minValue int
+	maxValue int
+}
+
+func (this *NoDuplicatesBoundedDice) Roll() int {
+	return this.minValue + this.rand.Intn(this.maxValue-this.minValue+1)
+}

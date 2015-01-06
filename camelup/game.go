@@ -45,14 +45,14 @@ func (this *RandomCamelStartPositioner) Position(camels []CamelState) {
 		camel := &camels[i]
 		pos := this.camelStepDice.Roll()
 		camel.position = pos
-		
+
 		maxLevel := -1
 		for _, camelAtPos := range camelsByPosition[pos] {
 			if camelAtPos.level > maxLevel {
 				maxLevel = camelAtPos.level
 			}
 		}
-		
+
 		camel.level = maxLevel + 1
 		camelsByPosition[pos] = append(camelsByPosition[pos], *camel)
 	}
