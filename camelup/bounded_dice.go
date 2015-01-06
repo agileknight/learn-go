@@ -41,7 +41,7 @@ func (this *NoDuplicatesBoundedDice) Roll() int {
 			this.resultsLeft[i] = this.minValue + i
 		}
 	}
-	
+
 	numLeft := len(this.resultsLeft)
 	resultIndex := this.rand.Intn(numLeft)
 	result := this.resultsLeft[resultIndex]

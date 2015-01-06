@@ -71,7 +71,7 @@ func Init(config GameConfig) *Game {
 	game := Game{
 		config: config,
 
-		camelIndexDice:       &BoundedDice{&RandomRandInt{}, 0, config.numCamels},
+		camelIndexDice:       &NoDuplicatesBoundedDice{&RandomRandInt{}, 0, config.numCamels, nil},
 		camelStepDice:        &camelStepDice,
 		camelStartPositioner: &RandomCamelStartPositioner{&camelStepDice},
 
