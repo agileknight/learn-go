@@ -63,7 +63,7 @@ func TestNoDuplicatesBoundedDiceRoll(t *testing.T) {
 		randResults     []int
 		expectedResults []int
 	}{
-		{[]int{3, 3, 3}, []int{0, 1, 2}, []int{3, 4, 5}},
+		{[]int{3, 2, 1, 3, 2, 1}, []int{0, 0, 0, 0, 1, 0}, []int{3, 4, 5, 3, 5, 4}},
 	}
 
 	for _, c := range cases {
@@ -75,7 +75,7 @@ func TestNoDuplicatesBoundedDiceRoll(t *testing.T) {
 			}
 			if param := rand.CalledWith(); param != c.expectedParams[i] {
 				t.Errorf("Expected param %d but found %d", c.expectedParams[i], param)
-			}	
+			}
 		}
 	}
 }
