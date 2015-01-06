@@ -169,7 +169,7 @@ func (this *Game) nextPlayer() {
 }
 
 func (this *Game) hasFinalWinner() bool {
-	for _, camel:= range this.state.camels {
+	for _, camel := range this.state.camels {
 		if camel.position > this.config.boardLength {
 			return true
 		}
@@ -185,7 +185,7 @@ func (this *Game) determineWinners() {
 			maxMoney = player.money
 			winners = make([]int, 0)
 			winners = append(winners, i)
-		} else if (player.money == maxMoney) {
+		} else if player.money == maxMoney {
 			winners = append(winners, i)
 		}
 	}
