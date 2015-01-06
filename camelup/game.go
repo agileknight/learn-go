@@ -94,7 +94,9 @@ func (this *Game) Bet(camelIndex int) {
 }
 
 func moveCamel(camels []CamelState, camelIndex int, camelSteps int) {
-	// TODO implement
+	pos := camels[camelIndex].position + camelSteps
+	camels[camelIndex].level = findInsertLevelAtPos(camels, pos)
+	camels[camelIndex].position = pos
 }
 
 func (this *Game) Dice() {
