@@ -77,7 +77,7 @@ func TestAccFullBettingRound(t *testing.T) {
 		numPlayers:       2,
 		minCamelSteps:    1,
 		maxCamelSteps:    3,
-		boardLength:      20,
+		boardLength:      2,
 		startPlayerIndex: 0,
 	}
 
@@ -89,8 +89,10 @@ func TestAccFullBettingRound(t *testing.T) {
 
 	game.Bet(0)
 	game.Dice()
-	game.Dice()
 	if game.state.players[0].money != 8 {
 		t.Errorf("Bet was not counted.")
+	}
+	if len(game.state.winningPlayers) != 1 || game.state.winningPlayers[0] != 0 {
+		t.Errorf("Player with index 0 did not win. Winners: %q", game.state.winningPlayers)
 	}
 }

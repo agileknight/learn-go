@@ -31,6 +31,7 @@ type GameState struct {
 	camels         []CamelState
 	curPlayerIndex int
 	camelMovesLeft int
+	winningPlayers []int
 }
 
 type CamelStartPositioner interface {
@@ -159,6 +160,7 @@ func (this *Game) payout() {
 			newMoney = 0
 		}
 		this.state.players[i].money = newMoney
+		this.state.players[i].betAmountsByCamelIndex = make(map[int][]int)
 	}
 }
 
@@ -166,14 +168,43 @@ func (this *Game) nextPlayer() {
 	this.state.curPlayerIndex = (this.state.curPlayerIndex + 1) % this.config.numPlayers
 }
 
+func (this *Game) hasFinalWinner() bool {
+	for _, camel:= range this.state.camels {
+		if camel.position > this.config.boardLength {
+			return true
+		}
+	}
+	return false
+}
+
+func (this *Game) determineWinners() {
+	winners := make([]int, 0)
+	maxMoney := -1
+	for i, player := range this.state.players {
+		if player.money > maxMoney {
+			maxMoney = player.money
+			winners = make([]int, 0)
+			winners = append(winners, i)
+		} else if (player.money == maxMoney) {
+			winners = append(winners, i)
+		}
+	}
+	this.state.winningPlayers = winners
+}
+
 func (this *Game) Dice() {
 	camelIndex := this.camelIndexDice.Roll()
 	camelSteps := this.camelStepDice.Roll()
 	moveCamel(this.state.camels, camelIndex, camelSteps)
 	this.state.camelMovesLeft--
-	if this.state.camelMovesLeft == 0 {
+	hasFinalWinner := this.hasFinalWinner()
+	if this.state.camelMovesLeft == 0 || hasFinalWinner {
 		this.state.camelMovesLeft = this.config.numCamels
 		this.payout()
+	}
+	if hasFinalWinner {
+		this.determineWinners()
+		return
 	}
 	this.nextPlayer()
 }
