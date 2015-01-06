@@ -143,17 +143,22 @@ func findWinnerCamels(camels []CamelState) (winnerIndex int, secondIndex int) {
 
 func (this *Game) payout() {
 	winnerIndex, secondIndex := findWinnerCamels(this.state.camels)
-	for _, player := range this.state.players {
+	for i, player := range this.state.players {
 		totalDiff := 0
 		for _, amount := range player.betAmountsByCamelIndex[winnerIndex] {
 			totalDiff += amount
 		}
 		totalDiff += len(player.betAmountsByCamelIndex[secondIndex])
-		for i := range this.state.camels {
-			if i != winnerIndex && i != secondIndex {
-				totalDiff -= len(player.betAmountsByCamelIndex[i])
+		for k := range this.state.camels {
+			if k != winnerIndex && k != secondIndex {
+				totalDiff -= len(player.betAmountsByCamelIndex[k])
 			}
 		}
+		newMoney := player.money + totalDiff
+		if newMoney < 0 {
+			newMoney = 0
+		}
+		this.state.players[i].money = newMoney
 	}
 }
 
