@@ -89,17 +89,12 @@ func Init(config GameConfig) *Game {
 	return &game
 }
 
-func (this *Game) Bet(camelIndex int) {
-	// TODO implement
-}
-
 func findCamelAtPosAndLevel(camels []CamelState, pos int, level int) (index int, found bool) {
 	for i := range camels {
 		if camels[i].position == pos && camels[i].level == level {
 			return i, true
 		}
 	}
-
 	return -1, false
 }
 
@@ -124,4 +119,8 @@ func (this *Game) Dice() {
 	camelIndex := this.camelIndexDice.Roll()
 	camelSteps := this.camelStepDice.Roll()
 	moveCamel(this.state.camels, camelIndex, camelSteps)
+}
+
+func (this *Game) Bet(camelIndex int) {
+	// TODO implement
 }
