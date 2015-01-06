@@ -20,7 +20,8 @@ func TestStartPositioning(t *testing.T) {
 		expectedPositions []int
 		expectedLevels    []int
 	}{
-		{3, []int{0, 2, 1}, []int{0, 2, 1}, []int{0, 0, 0}},
+		{3, []int{1, 3, 2}, []int{1, 3, 2}, []int{0, 0, 0}},
+		{2, []int{1, 1}, []int{1, 1}, []int{0, 1}},
 	}
 
 	for _, c := range cases {
