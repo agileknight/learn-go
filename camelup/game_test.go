@@ -13,6 +13,31 @@ func (this *StubDice) Roll() int {
 	return result
 }
 
+func TestStartPositioning(t *testing.T) {
+	cases := []struct {
+		numCamels         int
+		diceRolls         []int
+		expectedPositions []int
+		expectedLevels    []int
+	}{
+		{3, []int{0, 2, 1}, []int{0, 2, 1}, []int{0, 0, 0}},
+	}
+
+	for _, c := range cases {
+		positioner := &RandomCamelStartPositioner{camelStepDice: &StubDice{rolls: c.diceRolls}}
+		camelStates := make([]CamelState, c.numCamels)
+		positioner.Position(&camelStates)
+		for i := range camelStates {
+			if gotPos := camelStates[i].position; gotPos != c.expectedPositions[i] {
+				t.Errorf("Wrong starting position of camel at index %d. Expected %d but was %d.", i, c.expectedPositions[i], gotPos)
+			}
+			if gotLevel := camelStates[i].level; gotLevel != c.expectedLevels[i] {
+				t.Errorf("Wrong starting level of camel at index %d. Expected %d but was %d.", i, c.expectedLevels[i], gotLevel)
+			}
+		}
+	}
+}
+
 func TestAccFullBettingRound(t *testing.T) {
 	config := GameConfig{
 		playerStartMoney: 3,
@@ -28,6 +53,7 @@ func TestAccFullBettingRound(t *testing.T) {
 
 	game.camelIndexDice = &StubDice{rolls: []int{0, 1}}
 	game.camelStepDice = &StubDice{rolls: []int{3, 1}}
+	game.camelStartPositioner = &RandomCamelStartPositioner{camelStepDice: &StubDice{rolls: []int{0, 1}}}
 
 	game.Bet(0)
 	game.Dice()
