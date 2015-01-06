@@ -31,19 +31,34 @@ type GameState struct {
 	curPlayerIndex int
 }
 
+type CamelStartPositioner interface {
+	Position(camels *[]CamelState)
+}
+
+type RandomCamelStartPositioner struct {
+	camelStepDice Dice
+}
+
+func (this *RandomCamelStartPositioner) Position(camel *[]CamelState) {
+	// TODO implement
+}
+
 type Game struct {
-	config         GameConfig
-	camelIndexDice Dice
-	camelStepDice  Dice
-	state          GameState
+	config               GameConfig
+	camelIndexDice       Dice
+	camelStepDice        Dice
+	camelStartPositioner CamelStartPositioner
+	state                GameState
 }
 
 func Init(config GameConfig) *Game {
+	camelStepDice := BoundedDice{&RandomRandInt{}, config.minCamelSteps, config.maxCamelSteps}
 	game := Game{
 		config: config,
 
-		camelIndexDice: &BoundedDice{&RandomRandInt{}, 0, config.numCamels},
-		camelStepDice:  &BoundedDice{&RandomRandInt{}, config.minCamelSteps, config.maxCamelSteps},
+		camelIndexDice:       &BoundedDice{&RandomRandInt{}, 0, config.numCamels},
+		camelStepDice:        &camelStepDice,
+		camelStartPositioner: &RandomCamelStartPositioner{&camelStepDice},
 
 		state: GameState{
 			players:        make([]PlayerState, config.numPlayers),
@@ -54,6 +69,7 @@ func Init(config GameConfig) *Game {
 	for i := range game.state.players {
 		game.state.players[i].money = config.playerStartMoney
 	}
+	game.camelStartPositioner.Position(&game.state.camels)
 	return &game
 }
 
